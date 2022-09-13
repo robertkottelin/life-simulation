@@ -37,20 +37,28 @@ impl BiotCollection {
                         continue;
                     }
                     if d2 as f32 > (self.biots[n].intelligence*self.biots[n].intelligence)*1600. {
+                        // Break when distance is too long
                         break;
                     }
                     if self.biots[n].stronger(&self.biots[other.idx]) {
+                        // Determines if a stronger intelligent cell shall move towards a weaker cell
                         feed_dir = Some(vec2(other.x as f32 -self.biots[n].pos.x, other.y as f32 -self.biots[n].pos.y).normalize());
+                        break;
+                    }
+                    if self.biots[n].weaker(&self.biots[other.idx]) {
+                        // Determines if a weaker intelligent cell shall move away from a stronger cell
+                        feed_dir = Some(vec2(other.x as f32 +self.biots[n].pos.x, other.y as f32 +self.biots[n].pos.y).normalize());
                         break;
                     }
                 }
             }
+            // 
             let off = self.biots[n].step(&tree, feed_dir);
             if let Some(offspring) = off {
                 new.push(offspring);
             }
         }
-        // Compute biot interactions
+        // Compute interactions
         let mut visited : HashSet<usize> = HashSet::new();
         for f in tree.iter() {
             visited.insert(f.idx);

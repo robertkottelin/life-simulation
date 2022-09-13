@@ -25,16 +25,14 @@
 
 <body>
     <canvas id="glcanvas" tabindex='1'></canvas>
-    <!-- Minified and statically hosted version of https://github.com/not-fl3/macroquad/blob/master/js/mq_js_bundle.js -->
     <script src="https://not-fl3.github.io/miniquad-samples/mq_js_bundle.js"></script>
     <script>load("target/wasm32-unknown-unknown/release/life-simulation.wasm");</script> <!-- Your compiled wasm file -->
 </body>
 <div id=text>
-  <p>Life simulation written in Rust. Source here: <a href="https://github.com/joelthelion/life_web">https://github.com/joelthelion/life_web</a>.
-  Inspired by this very old screensaver: <a href="https://sourceforge.net/projects/primlife/">https://sourceforge.net/projects/primlife/</a></p>
-  <p>Biots are allowed to evolve through mutation and natural selection.<br>Biots have a simple genome giving them unique characteristics:</p>
+  <p>Life simulation written in Rust. Source here: <a href=""></a>.
+  <p>Cells are allowed to evolve through mutation and natural selection.<br>Cells have a simple genome giving them unique characteristics:</p>
   <ul>
-    <li>Green allows them to collect energy from the sun</li><li>Red allows them to eat other biots</li><li>Dark blue allows them to defend</li><li>Light blue allows them to move around</li></ul>
-  <p>A special trait, intelligence (denoted by a square), allows them to move towards the nearest edible biot instead of randomly.<br>All non-green traits cost energy.</p>
+    <li>Green allows them to collect energy from the sun</li><li>Red allows them to eat other cells</li><li>Dark blue allows them to defend</li><li>Light blue allows them to move around</li></ul>
+  <p>A special trait, intelligence (denoted by a square), allows them to move towards or away from the nearest edible biot instead of randomly, depending on if the prey/attacker is stronger.<br>All non-green traits cost energy.</p>
 </div>
 </html>

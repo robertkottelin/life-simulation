@@ -1,4 +1,4 @@
-use macroquad::prelude::{Vec2, vec2, rand, screen_width, screen_height};
+use macroquad::prelude::*;
 use rstar::{AABB, PointDistance, RTree, RTreeObject};
 
 /// Elements of the biots' genomes:
@@ -10,7 +10,7 @@ use rstar::{AABB, PointDistance, RTree, RTreeObject};
 /// n does nothing
 const LETTERS : &[char] = &['a','d','p','m', 'n', 'n', 'n', 'i'];
 
-/// Modulus operator to get toroidal world topology
+/// Modulus operator to get toroidal world topology. Produces the remainder of an integer division.
 fn modulus<T>(a:T, b:T) -> T
 where T: std::ops::Rem<Output=T>+
       std::ops::Add<Output = T>+
@@ -68,6 +68,7 @@ impl Biot {
         let mut offspring = None;
         let adult_factor = 4.;
         if self.life >= self.base_life()*adult_factor {
+            // Check who is nearest
             let close_by = rtree.nearest_neighbor_iter_with_distance_2(&[self.pos.x as f64, self.pos.y as f64])
                 .nth(5);
             if close_by.map_or(true, |(_,d2)|d2>200.) {
@@ -77,7 +78,7 @@ impl Biot {
                     off.mutate();
                 }
                 off.life = off.base_life();
-                off.random_move(1.5);
+                off.random_move(1.0);
                 offspring = Some(off);
                 self.life = (adult_factor-1.)* self.base_life();
             }
@@ -85,8 +86,8 @@ impl Biot {
         self.pos += self.speed;
         self.pos.x = modulus(self.pos.x, screen_width());
         self.pos.y = modulus(self.pos.y, screen_height());
-        self.speed *= 0.9;
-        self.life += (self.photosynthesis - self.metabolism())*0.4;
+        self.speed *= 0.4;
+        self.life += (self.photosynthesis - self.metabolism())*0.6;
         if rand::gen_range(0., 1.) < 0.2*self.motion {
             let speed = 7. * self.motion / self.weight();
             if self.intelligence > 0. {
@@ -123,6 +124,10 @@ impl Biot {
     pub fn stronger(&self, other: &Self) -> bool {
         self.attack > other.attack + other.defense * 0.9
     }
+    /// Are we weaker than this other biot?
+    pub fn weaker(&self, other: &Self) -> bool {
+        self.attack < other.attack + other.defense * 0.9
+    }
     /// Compute chacteristics from biot genome
     fn set_from_genome(&mut self) {
         self.attack= self.genome.iter().filter(|&&c|c=='a').count() as f32 * 0.1;
@@ -146,7 +151,7 @@ impl Biot {
     }
     /// Original life points of a biot. Also used to determine when the biot will spawn
     fn base_life(&self) -> f32 {
-        8. * self.weight()
+        10. * self.weight()
     }
     /// Metabolic cost of various traits. These parameters are aboslutely critical to the
     /// simulation
@@ -182,3 +187,4 @@ fn distance_2(&self, point: &<<Self as rstar::RTreeObject>::Envelope as rstar::E
     (self.x-point[0])*(self.x-point[0]) + (self.y-point[1])*(self.y-point[1])
 }
 }
+
