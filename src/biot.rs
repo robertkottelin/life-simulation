@@ -66,7 +66,7 @@ impl Biot {
     /// Compute the evolution of the biot for one simulation step
     pub fn step(&mut self, rtree: &RTree<TreePoint>, feed_dir: Option<Vec2>) -> Option<Biot> {
         let mut offspring = None;
-        let adult_factor = 4.;
+        let adult_factor = 3.;
         if self.life >= self.base_life()*adult_factor {
             // Check who is nearest
             let close_by = rtree.nearest_neighbor_iter_with_distance_2(&[self.pos.x as f64, self.pos.y as f64])
@@ -87,9 +87,9 @@ impl Biot {
         self.pos.x = modulus(self.pos.x, screen_width());
         self.pos.y = modulus(self.pos.y, screen_height());
         self.speed *= 0.4;
-        self.life += (self.photosynthesis - self.metabolism())*0.6;
+        self.life += (self.photosynthesis - self.metabolism())*0.8;
         if rand::gen_range(0., 1.) < 0.2*self.motion {
-            let speed = 7. * self.motion / self.weight();
+            let speed = 2. * self.motion / self.weight();
             if self.intelligence > 0. {
                 if let Some(feed_dir) = feed_dir {
                     self.accelerate(feed_dir, speed);
@@ -108,11 +108,11 @@ impl Biot {
         let dist = (biots[i].pos - biots[j].pos).length();
         if dist < 10.* (biots[i].weight() + biots[j].weight()) {
             if biots[i].stronger(&biots[j]) {
-                biots[i].life += biots[j].life * 0.8;
+                biots[i].life += biots[j].life * 0.99;
                 biots[j].life = 0.;
             }
             else if biots[j].stronger(&biots[i]) {
-                biots[j].life += biots[i].life * 0.8;
+                biots[j].life += biots[i].life * 0.99;
                 biots[i].life = 0.;
             }
         }

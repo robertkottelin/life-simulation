@@ -84,7 +84,6 @@ impl BiotCollection {
             draw_circle(biot.pos.x,biot.pos.y, 7.*(biot.attack+biot.defense+biot.motion), RED);
             draw_circle(biot.pos.x,biot.pos.y, 7.*(biot.defense+biot.motion), DARKBLUE);
             draw_circle(biot.pos.x,biot.pos.y, 7.*(biot.motion), BLUE);
-
         }
     }
     /// The number of biots currently in our collection
@@ -92,4 +91,3 @@ impl BiotCollection {
         self.biots.len()
     }
 }
-
