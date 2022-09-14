@@ -45,11 +45,11 @@ impl BiotCollection {
                         feed_dir = Some(vec2(other.x as f32 -self.biots[n].pos.x, other.y as f32 -self.biots[n].pos.y).normalize());
                         break;
                     }
-                    if self.biots[n].weaker(&self.biots[other.idx]) {
-                        // Determines if a weaker intelligent cell shall move away from a stronger cell
-                        feed_dir = Some(vec2(other.x as f32 +self.biots[n].pos.x, other.y as f32 +self.biots[n].pos.y).normalize());
-                        break;
-                    }
+                    // if self.biots[n].weaker(&self.biots[other.idx]) {
+                    //     // Determines if a weaker intelligent cell shall move away from a stronger cell
+                    //     feed_dir = Some(vec2(other.x as f32 +self.biots[n].pos.x, other.y as f32 +self.biots[n].pos.y).normalize());
+                    //     break;
+                    // }
                 }
             }
             // 

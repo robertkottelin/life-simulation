@@ -118,7 +118,7 @@ impl Biot {
         }
     }
     pub fn dead(&self) -> bool {
-        self.life <= 0. || self.age >= 10000
+        self.life <= 0. || self.age >= 1000000000
     }
     /// Are we stronger than this other biot?
     pub fn stronger(&self, other: &Self) -> bool {

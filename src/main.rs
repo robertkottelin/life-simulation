@@ -1,15 +1,12 @@
 use macroquad::prelude::*;
-use graplot::Plot;
-
+// use graplot::Plot;
 mod biot;
 mod biot_collection;
-
 use biot_collection::BiotCollection;
 
 struct Textbox {
     rect: Rect,
 }
-
 impl Textbox {
     pub fn new() -> Self {
         Self {
@@ -21,7 +18,6 @@ impl Textbox {
             ),
         }
     }
-
     pub fn draw(&self) {
         draw_rectangle(self.rect.x, self.rect.y, self.rect.w, self.rect.h, DARKGRAY);
     }
@@ -48,7 +44,7 @@ async fn main() {
     loop {
         biots.step();
         iterations += 1;
-        clear_background(Color::new(0.,0.,0.1,1.0));
+        clear_background(Color::new(0.30, 0.25, 0.16, 1.00));
         biots.draw();
         textbox.draw();
         draw_text(&format!("FPS: {}, Cells: {}, Iterations: {}", get_fps(), biots.len(), iterations),
