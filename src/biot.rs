@@ -1,4 +1,4 @@
-use macroquad::prelude::*;
+use macroquad::prelude::{Vec2, vec2, rand, screen_width, screen_height};
 use rstar::{AABB, PointDistance, RTree, RTreeObject};
 
 /// Elements of the biots' genomes:
@@ -10,7 +10,7 @@ use rstar::{AABB, PointDistance, RTree, RTreeObject};
 /// n does nothing
 const LETTERS : &[char] = &['a','d','p','m', 'n', 'n', 'n', 'i'];
 
-/// Modulus operator to get toroidal world topology. Produces the remainder of an integer division.
+/// Modulus operator to get toroidal world topology
 fn modulus<T>(a:T, b:T) -> T
 where T: std::ops::Rem<Output=T>+
       std::ops::Add<Output = T>+
@@ -66,9 +66,8 @@ impl Biot {
     /// Compute the evolution of the biot for one simulation step
     pub fn step(&mut self, rtree: &RTree<TreePoint>, feed_dir: Option<Vec2>) -> Option<Biot> {
         let mut offspring = None;
-        let adult_factor = 3.;
+        let adult_factor = 4.;
         if self.life >= self.base_life()*adult_factor {
-            // Check who is nearest
             let close_by = rtree.nearest_neighbor_iter_with_distance_2(&[self.pos.x as f64, self.pos.y as f64])
                 .nth(5);
             if close_by.map_or(true, |(_,d2)|d2>200.) {
@@ -78,7 +77,7 @@ impl Biot {
                     off.mutate();
                 }
                 off.life = off.base_life();
-                off.random_move(1.0);
+                off.random_move(1.5);
                 offspring = Some(off);
                 self.life = (adult_factor-1.)* self.base_life();
             }
@@ -86,10 +85,10 @@ impl Biot {
         self.pos += self.speed;
         self.pos.x = modulus(self.pos.x, screen_width());
         self.pos.y = modulus(self.pos.y, screen_height());
-        self.speed *= 0.4;
-        self.life += (self.photosynthesis - self.metabolism())*0.8;
+        self.speed *= 0.9;
+        self.life += (self.photosynthesis - self.metabolism())*0.9;
         if rand::gen_range(0., 1.) < 0.2*self.motion {
-            let speed = 2. * self.motion / self.weight();
+            let speed = 7. * self.motion / self.weight();
             if self.intelligence > 0. {
                 if let Some(feed_dir) = feed_dir {
                     self.accelerate(feed_dir, speed);
@@ -108,25 +107,21 @@ impl Biot {
         let dist = (biots[i].pos - biots[j].pos).length();
         if dist < 10.* (biots[i].weight() + biots[j].weight()) {
             if biots[i].stronger(&biots[j]) {
-                biots[i].life += biots[j].life * 0.99;
+                biots[i].life += biots[j].life * 0.8;
                 biots[j].life = 0.;
             }
             else if biots[j].stronger(&biots[i]) {
-                biots[j].life += biots[i].life * 0.99;
+                biots[j].life += biots[i].life * 0.8;
                 biots[i].life = 0.;
             }
         }
     }
     pub fn dead(&self) -> bool {
-        self.life <= 0. || self.age >= 1000000000
+        self.life <= 0. || self.age >= 10000000
     }
     /// Are we stronger than this other biot?
     pub fn stronger(&self, other: &Self) -> bool {
         self.attack > other.attack + other.defense * 0.9
-    }
-    /// Are we weaker than this other biot?
-    pub fn weaker(&self, other: &Self) -> bool {
-        self.attack < other.attack + other.defense * 0.9
     }
     /// Compute chacteristics from biot genome
     fn set_from_genome(&mut self) {
@@ -151,12 +146,12 @@ impl Biot {
     }
     /// Original life points of a biot. Also used to determine when the biot will spawn
     fn base_life(&self) -> f32 {
-        10. * self.weight()
+        8. * self.weight()
     }
     /// Metabolic cost of various traits. These parameters are aboslutely critical to the
     /// simulation
     fn metabolism(&self) -> f32 {
-        0.2*(4.5*self.attack + 2.3*self.defense + 2.5*self.motion + 0.1*self.intelligence)
+        0.1*(4.5*self.attack + 2.3*self.defense + 2.5*self.motion + 0.1*self.intelligence)
     }
     /// Total weight of the biot, useful for computing motion
     fn weight(&self) -> f32 {
@@ -187,4 +182,3 @@ fn distance_2(&self, point: &<<Self as rstar::RTreeObject>::Envelope as rstar::E
     (self.x-point[0])*(self.x-point[0]) + (self.y-point[1])*(self.y-point[1])
 }
 }
-

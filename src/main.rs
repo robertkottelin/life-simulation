@@ -14,7 +14,7 @@ impl Textbox {
                 screen_width() * 0.0f32,
                 screen_height() * 0.0f32,
                 2000f32,
-                22f32,
+                30f32,
             ),
         }
     }
@@ -48,7 +48,7 @@ async fn main() {
         biots.draw();
         textbox.draw();
         draw_text(&format!("FPS: {}, Cells: {}, Iterations: {}", get_fps(), biots.len(), iterations),
-            screen_width()*0.01f32, screen_height()*0.028f32,
+            screen_width()*0.01f32, screen_height()*0.02f32,
             22.,
             WHITE);
         next_frame().await
