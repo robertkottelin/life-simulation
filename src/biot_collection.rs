@@ -7,6 +7,26 @@ where T: std::ops::Rem<Output=T>+
 {
     ((a % b) + b) % b
 }
+/// Nutrition
+pub struct Nutrition {
+    glucose_conc: f32,
+}
+
+impl Nutrition {
+    pub fn new() -> Self{
+        let mut nutrition = Self {
+            glucose_conc: 100f32,
+        };
+        nutrition
+    }
+    pub fn set_nutrition(x: f32) {
+        self.glucose_conc = x;
+    }
+    pub fn get_nutrition() -> Nutrition{
+        nutrition
+    }
+}
+
 /// A single biot
 #[derive(Clone, Debug)]
 pub struct Biot {
@@ -32,10 +52,6 @@ impl Biot {
     }
 
     pub fn step(&mut self) {
-        if self.life >= 1f32 {
-            BiotCollection::new(1);
-            self.life -= 200f32;
-        }
         self.pos += self.speed;
         self.pos.x = modulus(self.pos.x, screen_width());
         self.pos.y = modulus(self.pos.y, screen_height());
@@ -50,13 +66,12 @@ impl Biot {
     fn accelerate(&mut self, dir:Vec2, speed: f32) {
         self.speed += dir *speed;
     }
-
     fn base_life(&self) -> f32 {
-        100f32
+        1f32
     }
 }
 
-/// A collection of biots. Responsible for handling interactions between biots
+/// The collection of biots.
 pub struct BiotCollection {
     biots: Vec<Biot>
 }
@@ -71,17 +86,27 @@ impl BiotCollection {
     }
     /// Compute one step of the simulation.
     pub fn step(&mut self) {
+        let mut offspring = Vec::new();
         let mut new : Vec<Biot> = Vec::new();
-
         for n in 0..(self.biots.len()) {
             self.biots[n].step();
+            // cloning 
+            if  >= 50i32 {
+                let mut off = self.biots[n].clone();
+                off.life = 1f32;
+                off.random_move(1.5);
+                offspring.push(off);
+            }
+            self.biots[n].life += 1f32;
         }
         self.biots.append(&mut new);
+        self.biots.append(&mut offspring);
+        let _ = NUTRITION-1;
     }
     /// Display the biot collection
     pub fn draw(&self) {
         for biot in self.biots.iter() {
-            draw_circle(biot.pos.x,biot.pos.y, 7., GREEN);
+            draw_circle(biot.pos.x,biot.pos.y, 4., GREEN);
         }
     }
     /// The number of biots currently in our collection

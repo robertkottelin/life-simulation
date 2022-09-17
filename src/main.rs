@@ -1,6 +1,6 @@
 use macroquad::prelude::*;
 mod biot_collection;
-use biot_collection::BiotCollection;
+use biot_collection::{BiotCollection};
 
 fn window_conf() -> Conf {
     Conf {
