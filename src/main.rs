@@ -12,7 +12,7 @@ fn window_conf() -> Conf {
         ..Default::default()
     }
 }
-#[allow(dead_code)]
+
 fn initalize_database() {
     //Interface with sqlite
     let conn = Connection::open("simulation.db").unwrap();
@@ -20,15 +20,15 @@ fn initalize_database() {
         "create table if not exists simulation (
             id integer primary key,
             iteration integer,
-            cells integer,
+            cells integer
         )",
         [],
     )
     .unwrap();
 }
-#[allow(dead_code)]
+
 fn input_database(iteration: i32, cells: i32) {
-    let conn = Connection::open("gamestate.db").unwrap();
+    let conn = Connection::open("simulation.db").unwrap();
     conn.execute(
         "INSERT INTO simulation (iteration, cells) values (?1, ?2)",
         [iteration, cells],
@@ -57,6 +57,12 @@ async fn main() {
         );
         iterations += 1;
         biots.draw();
+
+
+        if iterations % 1000 == 0 {
+            initalize_database();
+            input_database(iterations, biots.len() as i32);
+        }
         next_frame().await
     }
 }

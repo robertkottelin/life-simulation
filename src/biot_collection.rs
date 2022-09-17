@@ -110,7 +110,7 @@ impl BiotCollection {
         }
     }
     /// The number of biots currently in our collection
-    pub fn len(&self) -> usize {
-        self.biots.len()
+    pub fn len(&self) -> i32 {
+        self.biots.len() as i32
     }
 }
