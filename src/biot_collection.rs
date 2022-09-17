@@ -1,9 +1,8 @@
 use macroquad::prelude::*;
 /// Modulus operator to get toroidal world topology
-fn modulus<T>(a:T, b:T) -> T
-where T: std::ops::Rem<Output=T>+
-      std::ops::Add<Output = T>+
-      Copy
+fn modulus<T>(a: T, b: T) -> T
+where
+    T: std::ops::Rem<Output = T> + std::ops::Add<Output = T> + Copy,
 {
     ((a % b) + b) % b
 }
@@ -38,9 +37,9 @@ impl Biot {
         let mut s = Self {
             life: 0.,
             pos: vec2(
-                rand::gen_range(0., 1.)*screen_width(),
-                rand::gen_range(0., 1.)*screen_height()
-                ),
+                rand::gen_range(0., 1.) * screen_width(),
+                rand::gen_range(0., 1.) * screen_height(),
+            ),
             speed: vec2(0., 0.),
         };
         // s.set_from_genome();
@@ -58,11 +57,14 @@ impl Biot {
     }
 
     fn random_move(&mut self, speed: f32) {
-        self.accelerate(vec2(rand::gen_range(0., 1.)-0.5, rand::gen_range(0., 1.)-0.5).normalize(), speed);
+        self.accelerate(
+            vec2(rand::gen_range(0., 1.) - 0.5, rand::gen_range(0., 1.) - 0.5).normalize(),
+            speed,
+        );
     }
     /// Apply acceleration in a certain direction
-    fn accelerate(&mut self, dir:Vec2, speed: f32) {
-        self.speed += dir *speed;
+    fn accelerate(&mut self, dir: Vec2, speed: f32) {
+        self.speed += dir * speed;
     }
     fn base_life(&self) -> f32 {
         1f32
@@ -71,7 +73,7 @@ impl Biot {
 
 /// The collection of biots.
 pub struct BiotCollection {
-    biots: Vec<Biot>
+    biots: Vec<Biot>,
 }
 impl BiotCollection {
     /// Create n random biots
@@ -85,7 +87,7 @@ impl BiotCollection {
     /// Compute one step of the simulation.
     pub fn step(&mut self) {
         let mut offspring = Vec::new();
-        let mut new : Vec<Biot> = Vec::new();
+        let mut new: Vec<Biot> = Vec::new();
         for n in 0..(self.biots.len()) {
             self.biots[n].step();
             if self.biots.len() <= 20000 {
@@ -104,7 +106,7 @@ impl BiotCollection {
     /// Display the biot collection
     pub fn draw(&self) {
         for biot in self.biots.iter() {
-            draw_circle(biot.pos.x,biot.pos.y, 4., GREEN);
+            draw_circle(biot.pos.x, biot.pos.y, 4., GREEN);
         }
     }
     /// The number of biots currently in our collection
