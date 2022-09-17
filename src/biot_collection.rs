@@ -52,7 +52,7 @@ impl Biot {
     }
 
     fn base_life(&self) -> f32 {
-        1000f32
+        100f32
     }
 }
 

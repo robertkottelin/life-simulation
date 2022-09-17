@@ -1,19 +1,17 @@
 use macroquad::prelude::*;
-// use graplot::Plot;
-mod biot;
 mod biot_collection;
 use biot_collection::BiotCollection;
 
 fn window_conf() -> Conf {
     Conf {
-        window_title: "Life Simulation".to_owned(),
+        window_title: "Yeast Simulation".to_owned(),
         fullscreen: false,
         ..Default::default()
     }
 }
 #[macroquad::main(window_conf())]
 async fn main() {
-    let mut biots = BiotCollection::new(60);
+    let mut biots = BiotCollection::new(10);
     let mut iterations = 1;
 
     loop {
@@ -25,6 +23,7 @@ async fn main() {
             22.,
             WHITE);
         iterations += 1;
+
         next_frame().await
     }
 }
