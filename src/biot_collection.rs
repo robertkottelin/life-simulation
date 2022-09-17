@@ -8,21 +8,21 @@ where T: std::ops::Rem<Output=T>+
     ((a % b) + b) % b
 }
 /// Nutrition
-#[derive(Clone, Debug)]
-pub struct Nutrition {
-    nutrition: f32,
-}
-impl Nutrition {
-    pub fn new() -> Self{
-        let mut nutrition = Self {
-            nutrition: 100f32,
-        };
-        nutrition
-    }
-    pub fn get_nutrition(&self) -> f32 {
-        self.nutrition
-    }
-}
+// #[derive(Clone, Debug)]
+// pub struct Nutrition {
+//     nutrition: f32,
+// }
+// impl Nutrition {
+//     pub fn new() -> Self{
+//         let mut nutrition = Self {
+//             nutrition: 100f32,
+//         };
+//         nutrition
+//     }
+//     pub fn get_nutrition(&self) -> f32 {
+//         self.nutrition
+//     }
+// }
 
 /// A single biot
 #[derive(Clone, Debug)]
