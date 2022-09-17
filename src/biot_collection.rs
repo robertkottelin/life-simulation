@@ -19,9 +19,6 @@ impl Nutrition {
         };
         nutrition
     }
-    pub fn update_nutrition(&self, x: f32) {
-        self.nutrition = x;
-    }
     pub fn get_nutrition(&self) -> f32 {
         self.nutrition
     }
@@ -92,7 +89,7 @@ impl BiotCollection {
         for n in 0..(self.biots.len()) {
             self.biots[n].step();
             // cloning 
-            if nutrition >= 50f32 {
+            if self.biots[n].life == 1000f32 {
                 let mut off = self.biots[n].clone();
                 off.life = 1f32;
                 off.random_move(1.5);
