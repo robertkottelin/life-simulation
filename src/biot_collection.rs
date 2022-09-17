@@ -8,22 +8,22 @@ where T: std::ops::Rem<Output=T>+
     ((a % b) + b) % b
 }
 /// Nutrition
+#[derive(Clone, Debug)]
 pub struct Nutrition {
-    glucose_conc: f32,
+    nutrition: f32,
 }
-
 impl Nutrition {
     pub fn new() -> Self{
         let mut nutrition = Self {
-            glucose_conc: 100f32,
+            nutrition: 100f32,
         };
         nutrition
     }
-    pub fn set_nutrition(x: f32) {
-        self.glucose_conc = x;
+    pub fn update_nutrition(&self, x: f32) {
+        self.nutrition = x;
     }
-    pub fn get_nutrition() -> Nutrition{
-        nutrition
+    pub fn get_nutrition(&self) -> f32 {
+        self.nutrition
     }
 }
 
@@ -86,12 +86,13 @@ impl BiotCollection {
     }
     /// Compute one step of the simulation.
     pub fn step(&mut self) {
+        let mut nutrition = Nutrition::new();
         let mut offspring = Vec::new();
         let mut new : Vec<Biot> = Vec::new();
         for n in 0..(self.biots.len()) {
             self.biots[n].step();
             // cloning 
-            if  >= 50i32 {
+            if nutrition >= 50f32 {
                 let mut off = self.biots[n].clone();
                 off.life = 1f32;
                 off.random_move(1.5);
@@ -101,7 +102,6 @@ impl BiotCollection {
         }
         self.biots.append(&mut new);
         self.biots.append(&mut offspring);
-        let _ = NUTRITION-1;
     }
     /// Display the biot collection
     pub fn draw(&self) {
