@@ -54,6 +54,7 @@ impl Biot {
         self.pos.y = modulus(self.pos.y, screen_height());
         self.speed *= 0.1;
         self.random_move(0.2);
+        self.life += 1.0;
     }
 
     fn random_move(&mut self, speed: f32) {
@@ -83,13 +84,11 @@ impl BiotCollection {
     }
     /// Compute one step of the simulation.
     pub fn step(&mut self) {
-        let mut nutrition = Nutrition::new();
         let mut offspring = Vec::new();
         let mut new : Vec<Biot> = Vec::new();
         for n in 0..(self.biots.len()) {
             self.biots[n].step();
-            // cloning 
-            if self.biots[n].life == 100f32 {
+            if (self.biots[n].life % 1000.0) == 0.0 {
                 let mut off = self.biots[n].clone();
                 off.life = 1f32;
                 off.random_move(1.5);
@@ -111,4 +110,3 @@ impl BiotCollection {
         self.biots.len()
     }
 }
-

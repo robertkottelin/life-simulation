@@ -17,13 +17,12 @@ async fn main() {
     loop {
         biots.step();
         clear_background(Color::new(0.30, 0.25, 0.16, 1.00));
-        biots.draw();
         draw_text(&format!("FPS: {}, Cells: {}, Iterations: {}", get_fps(), biots.len(), iterations),
             screen_width()*0.01f32, screen_height()*0.02f32,
             22.,
             WHITE);
         iterations += 1;
-
+        biots.draw();
         next_frame().await
     }
 }
