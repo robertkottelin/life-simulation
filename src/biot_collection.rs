@@ -89,7 +89,7 @@ impl BiotCollection {
         for n in 0..(self.biots.len()) {
             self.biots[n].step();
             // cloning 
-            if self.biots[n].life == 1000f32 {
+            if self.biots[n].life == 100f32 {
                 let mut off = self.biots[n].clone();
                 off.life = 1f32;
                 off.random_move(1.5);
