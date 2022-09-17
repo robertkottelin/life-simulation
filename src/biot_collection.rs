@@ -52,7 +52,7 @@ impl Biot {
         self.pos += self.speed;
         self.pos.x = modulus(self.pos.x, screen_width());
         self.pos.y = modulus(self.pos.y, screen_height());
-        self.speed *= 0.1;
+        self.speed *= 0.2;
         self.random_move(0.2);
         self.life += 1.0;
     }
@@ -88,11 +88,13 @@ impl BiotCollection {
         let mut new : Vec<Biot> = Vec::new();
         for n in 0..(self.biots.len()) {
             self.biots[n].step();
-            if (self.biots[n].life % 1000.0) == 0.0 {
-                let mut off = self.biots[n].clone();
-                off.life = 1f32;
-                off.random_move(1.5);
-                offspring.push(off);
+            if self.biots.len() <= 20000 {
+                if (self.biots[n].life % 1000.0) == 0.0 {
+                    let mut off = self.biots[n].clone();
+                    off.life = 1f32;
+                    off.random_move(2.0);
+                    offspring.push(off);
+                }
             }
             self.biots[n].life += 1f32;
         }
