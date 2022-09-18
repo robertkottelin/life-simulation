@@ -24,8 +24,8 @@ impl Nutrition {
         let nutrition = Self {
             nutrition_conc: 100f32,
             pos: vec2(
-                rand::gen_range(0., 1.) * screen_width(),
-                rand::gen_range(0., 1.) * screen_height(),
+                0.5f32 * screen_width(),
+                0.5f32 * screen_height(),
             ),
         };
         nutrition
