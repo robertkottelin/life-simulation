@@ -1,27 +1,23 @@
 use macroquad::prelude::*;
-/// Modulus operator to get toroidal world topology
-fn modulus<T>(a: T, b: T) -> T
-where
-    T: std::ops::Rem<Output = T> + std::ops::Add<Output = T> + Copy,
-{
-    ((a % b) + b) % b
-}
+use rayon::prelude::*;
+mod modulus;
+
 /// Nutrition
-// #[derive(Clone, Debug)]
-// pub struct Nutrition {
-//     nutrition: f32,
-// }
-// impl Nutrition {
-//     pub fn new() -> Self{
-//         let mut nutrition = Self {
-//             nutrition: 100f32,
-//         };
-//         nutrition
-//     }
-//     pub fn get_nutrition(&self) -> f32 {
-//         self.nutrition
-//     }
-// }
+#[derive(Clone, Debug)]
+pub struct Nutrition {
+    nutrition: f32,
+    pos: Vec2,
+}
+impl RenderEntity for Nutrition {
+    fn render(&self) {
+        draw_circle(self.pos.x, self.pos.y, 40., GREEN);
+    }
+}
+
+// Implement trait to render biots
+trait RenderEntity {
+    fn render(&self);
+}
 
 /// A single biot
 #[derive(Clone, Debug)]
@@ -31,6 +27,13 @@ pub struct Biot {
     pub pos: Vec2,
     speed: Vec2,
 }
+
+impl RenderEntity for Biot {
+    fn render(&self) {
+        draw_circle(self.pos.x, self.pos.y, 4., GREEN);
+    }
+}
+
 impl Biot {
     /// Create a random biot
     pub fn random_biot() -> Self {
@@ -46,16 +49,14 @@ impl Biot {
         s.life = s.base_life();
         s
     }
-
     pub fn step(&mut self) {
         self.pos += self.speed;
-        self.pos.x = modulus(self.pos.x, screen_width());
-        self.pos.y = modulus(self.pos.y, screen_height());
+        self.pos.x = modulus::modulus(self.pos.x, screen_width());
+        self.pos.y = modulus::modulus(self.pos.y, screen_height());
         self.speed *= 0.2;
         self.random_move(0.2);
         self.life += 1.0;
     }
-
     fn random_move(&mut self, speed: f32) {
         self.accelerate(
             vec2(rand::gen_range(0., 1.) - 0.5, rand::gen_range(0., 1.) - 0.5).normalize(),
@@ -105,9 +106,10 @@ impl BiotCollection {
     }
     /// Display the biot collection
     pub fn draw(&self) {
-        for biot in self.biots.iter() {
-            draw_circle(biot.pos.x, biot.pos.y, 4., GREEN);
-        }
+        self.biots.par_iter().for_each(RenderEntity::render);
+        // for biot in self.biots.iter() {
+        //     draw_circle(biot.pos.x, biot.pos.y, 4., GREEN);
+        // }
     }
     /// The number of biots currently in our collection
     pub fn len(&self) -> i32 {

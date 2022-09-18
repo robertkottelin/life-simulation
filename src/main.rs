@@ -1,7 +1,7 @@
-
 use macroquad::prelude::*;
 mod biot_collection;
-use biot_collection::{BiotCollection, Biot};
+use biot_collection::{Biot, BiotCollection};
+use rayon::prelude::*;
 use rusqlite::{Connection, Result};
 
 fn window_conf() -> Conf {
@@ -11,7 +11,6 @@ fn window_conf() -> Conf {
         ..Default::default()
     }
 }
-
 fn initalize_database() {
     //Interface with sqlite
     let conn = Connection::open("simulation.db").unwrap();
@@ -25,7 +24,6 @@ fn initalize_database() {
     )
     .unwrap();
 }
-
 fn input_database(iteration: i32, cells: i32) {
     let conn = Connection::open("simulation.db").unwrap();
     conn.execute(
@@ -34,26 +32,58 @@ fn input_database(iteration: i32, cells: i32) {
     )
     .unwrap();
 }
-// fn query_db() -> Vec<i32> {
-//     let mut query_cells = Vec<>::new();
-//     let mut query_cells_out = Vec<>::new();
-//     let conn = Connection::open("simulation.db").unwrap();
-//     let mut stmt = conn.prepare("SELECT cells FROM simulation").unwrap();
-//     let query_iter = stmt.query_map([], |row| {
-//         Ok(query_cells)
-//     }).unwrap();
-//     for cell in query_iter {
-//         query_cells_out.push(cell);
-//     }
-//     query_cells_out
-// }
-
-
+#[derive(Copy, Clone)]
+struct CellIteration {
+    cell_count: i32,
+    iteration: i32,
+}
+enum MyError {
+    DBError(rusqlite::Error),
+    RowError(Vec<String>),
+}
+impl From<rusqlite::Error> for MyError {
+    fn from(err: rusqlite::Error) -> Self {
+        Self::DBError(err)
+    }
+}
+fn query_db() -> Result<Vec<CellIteration>, MyError> {
+    // let mut query_cells = Vec<>::new();
+    // let mut query_cells_out = Vec<>::new();
+    let conn = Connection::open("simulation.db").unwrap();
+    let mut stmt = conn
+        .prepare("SELECT iteration, cells FROM simulation")
+        .unwrap();
+    let query: Vec<Result<CellIteration, rusqlite::Error>> = stmt
+        .query_map([], |row| {
+            Ok(CellIteration {
+                iteration: row.get(1)?,
+                cell_count: row.get(0)?,
+            })
+        })?
+        .collect();
+    let errors = query
+        .iter()
+        .filter_map(|r| match r {
+            Err(err) => Some(format!("Errors: {}", err)),
+            Ok(_) => None,
+        })
+        .collect::<Vec<_>>();
+    if !errors.is_empty() {
+        return Err(MyError::RowError(errors));
+    }
+    let celliterations = query
+        .par_iter()
+        .filter_map(|r| match r {
+            Ok(ci) => Some(*ci),
+            _ => None,
+        })
+        .collect();
+    Ok(celliterations)
+}
 #[macroquad::main(window_conf())]
 async fn main() {
     let mut biots = BiotCollection::new(10);
     let mut iterations = 1;
-
 
     loop {
         biots.step();
@@ -72,7 +102,6 @@ async fn main() {
         );
         iterations += 1;
         biots.draw();
-
 
         if iterations % 1000 == 0 {
             initalize_database();
