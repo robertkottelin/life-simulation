@@ -34,19 +34,19 @@ fn input_database(iteration: i32, cells: i32) {
     )
     .unwrap();
 }
-fn query_db() -> Vec<i32> {
-    let mut query_cells = Vec<>::new();
-    let mut query_cells_out = Vec<>::new();
-    let conn = Connection::open("simulation.db").unwrap();
-    let mut stmt = conn.prepare("SELECT cells FROM simulation").unwrap();
-    let query_iter = stmt.query_map([], |row| {
-        Ok(query_cells)
-    }).unwrap();
-    for cell in query_iter {
-        query_cells_out.push(cell);
-    }
-    query_cells_out
-}
+// fn query_db() -> Vec<i32> {
+//     let mut query_cells = Vec<>::new();
+//     let mut query_cells_out = Vec<>::new();
+//     let conn = Connection::open("simulation.db").unwrap();
+//     let mut stmt = conn.prepare("SELECT cells FROM simulation").unwrap();
+//     let query_iter = stmt.query_map([], |row| {
+//         Ok(query_cells)
+//     }).unwrap();
+//     for cell in query_iter {
+//         query_cells_out.push(cell);
+//     }
+//     query_cells_out
+// }
 
 
 #[macroquad::main(window_conf())]
