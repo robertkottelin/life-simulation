@@ -32,7 +32,7 @@ impl Nutrition {
     }
     /// Display the nutrition
     pub fn draw(&self) {
-        draw_circle(self.pos.x, self.pos.y, 200., LIGHTGRAY);
+        draw_circle(self.pos.x, self.pos.y, 200., GRAY);
     }
 }
 
@@ -108,12 +108,12 @@ impl BiotCollection {
         for n in 0..(self.biots.len()) {
             self.biots[n].step();
             if self.biots.len() <= 20000 {
-                if (self.biots[n].life % 1000.0) == 0.0 {
-                    let mut off = self.biots[n].clone();
-                    off.life = 1f32;
-                    off.random_move(2.0);
-                    offspring.push(off);
-                }
+                // if (self.biots[n].life % 1000.0) == 0.0 {
+                //     let mut off = self.biots[n].clone();
+                //     off.life = 1f32;
+                //     off.random_move(2.0);
+                //     offspring.push(off);
+                // }
             }
             self.biots[n].life += 1f32;
         }
