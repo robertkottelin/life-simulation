@@ -1,6 +1,6 @@
 use macroquad::prelude::*;
 mod biot_collection;
-use biot_collection::{Biot, BiotCollection};
+use biot_collection::{Biot, BiotCollection, Nutrition};
 use rayon::prelude::*;
 use rusqlite::{Connection, Result};
 
@@ -83,6 +83,7 @@ fn query_db() -> Result<Vec<CellIteration>, MyError> {
 #[macroquad::main(window_conf())]
 async fn main() {
     let mut biots = BiotCollection::new(10);
+    let nutrition = Nutrition::new();
     let mut iterations = 1;
 
     loop {
@@ -101,7 +102,9 @@ async fn main() {
             WHITE,
         );
         iterations += 1;
+        nutrition.draw();
         biots.draw();
+
 
         if iterations % 1000 == 0 {
             initalize_database();

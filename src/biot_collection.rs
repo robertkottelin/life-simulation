@@ -2,27 +2,43 @@ use macroquad::prelude::*;
 use rayon::prelude::*;
 mod modulus;
 
-/// Nutrition
-#[derive(Clone, Debug)]
-pub struct Nutrition {
-    nutrition: f32,
-    pos: Vec2,
-}
-impl RenderEntity for Nutrition {
-    fn render(&self) {
-        draw_circle(self.pos.x, self.pos.y, 40., GREEN);
-    }
-}
-
 // Implement trait to render biots
 trait RenderEntity {
     fn render(&self);
 }
 
+/// Nutrition
+#[derive(Clone, Debug)]
+pub struct Nutrition {
+    nutrition_conc: f32,
+    pub pos: Vec2,
+}
+impl RenderEntity for Nutrition {
+    fn render(&self) {
+        draw_circle(self.pos.x, self.pos.y, 100., GREEN);
+    }
+}
+impl Nutrition {
+    /// Create n random biots
+    pub fn new() -> Self {
+        let nutrition = Self {
+            nutrition_conc: 100f32,
+            pos: vec2(
+                rand::gen_range(0., 1.) * screen_width(),
+                rand::gen_range(0., 1.) * screen_height(),
+            ),
+        };
+        nutrition
+    }
+    /// Display the nutrition
+    pub fn draw(&self) {
+        draw_circle(self.pos.x, self.pos.y, 200., LIGHTGRAY);
+    }
+}
+
 /// A single biot
 #[derive(Clone, Debug)]
 pub struct Biot {
-    // Status
     life: f32,
     pub pos: Vec2,
     speed: Vec2,
