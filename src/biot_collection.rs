@@ -34,32 +34,6 @@ impl Nutrition {
     pub fn draw(&self) {
         draw_circle(self.pos.x, self.pos.y, 200., GRAY);
     }
-    /// Returns the left edge of the Biot
-    pub fn left(&self) -> f32 {
-        self.pos.x
-    }
-
-    /// Returns the right edge of the Biot
-    pub fn right(&self) -> f32 {
-        self.pos.x + self.pos.length()
-    }
-
-    /// Returns the top edge of the Biot
-    pub fn top(&self) -> f32 {
-        self.pos.y
-    }
-
-    /// Returns the bottom edge of the Biot
-    pub fn bottom(&self) -> f32 {
-        self.pos.y + self.pos.length()
-    }
-    // Checks whether the `Rect` overlaps another `Rect`
-    // pub fn overlaps(&self, other: &Biot) -> bool {
-    //     self.pos.left() <= other.pos.right()
-    //         && self.pos.right() >= other.pos.left()
-    //         && self.pos.top() <= other.pos.bottom()
-    //         && self.pos.bottom() >= other.pos.top()
-    // }
 }
 
 /// A single biot
@@ -111,25 +85,6 @@ impl Biot {
     }
     fn base_life(&self) -> f32 {
         1f32
-    }
-    /// Returns the left edge of the Biot
-    pub fn left(&self) -> f32 {
-        self.pos.x
-    }
-
-    /// Returns the right edge of the Biot
-    pub fn right(&self) -> f32 {
-        self.pos.x + self.pos.length()
-    }
-
-    /// Returns the top edge of the Biot
-    pub fn top(&self) -> f32 {
-        self.pos.y
-    }
-
-    /// Returns the bottom edge of the Biot
-    pub fn bottom(&self) -> f32 {
-        self.pos.y + self.pos.length()
     }
 }
 
