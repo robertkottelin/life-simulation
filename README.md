@@ -1,4 +1,2 @@
 # life-simulation
-TODO: 
-- Implement yeast caracteristics
-- 
+Simulates evolution of bacteria
