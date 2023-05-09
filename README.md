@@ -1,3 +1,3 @@
 # life-simulation
 Simulates evolution of bacteria
-![simulation.png]
+![Alt text](simulation.png)
